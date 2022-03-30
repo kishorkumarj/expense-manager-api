@@ -140,7 +140,6 @@ exports.login = [
 exports.logout = [
   auth,
   function(req, res){
-    console.log('user::: ', req.user)
     return apiResponse.successResponse(res, 'Logout success')
   }
 ]

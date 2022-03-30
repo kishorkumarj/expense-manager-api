@@ -14,7 +14,51 @@ const userSchema = mongoose.Schema({
     enum: ['admin', 'user'],
     default: 'user',
     required: true
-  }
+  },
+
+  preferences: {
+    type: {
+      theme: {
+        type: String,
+        required: true,
+        enum: ['light', 'dark'],
+        default: 'light'
+      },
+      currancy: {
+        type: String,
+        required: true,
+        enum: ['INR', 'Dollar'],
+        default: 'INR'
+      },
+    },
+    required: false,
+    default: {
+      theme: 'light',
+      currancy: 'INR'
+    }
+  },
+
+  spendCategory: {
+    type:[{
+      name: {type: String, require: true},
+      value: {type: String, require: true},
+      active: {type: Boolean, required: true, default: true},
+      color: {type: String, required: false, default: null},
+    }],
+    required: false,
+    default: []
+  },
+
+  creditCategory: {
+    type:[{
+      name: {type: String, require: true},
+      value: {type: String, require: true},
+      active: {type: Boolean, required: true, default: true},
+      color: {type: String, required: false, default: null},
+    }],
+    required: false,
+    default: []
+  },
 
 })
 

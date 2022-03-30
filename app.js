@@ -1,19 +1,24 @@
+var dotenv = require('dotenv');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var cors = require('cors');
 var mongoose = require('mongoose')
+dotenv.config()
 
-
+var config = require('./config/config');
 var indexRouter = require('./routes/index');
 var mainRouter = require('./routes/main');
+var { loadAppLookups } = require('./utils/initLookup');
 
+global.baseDir = __dirname;
 
-var MONGODB_URL = process.env.MONGODB_URL || 'mongodb://localhost:27017/expense-tracker';
-mongoose.connect(MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(config.MONGO_DB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
 .then(() => {
-  console.log('connected to ', MONGODB_URL)
+  console.log('connected to ', config.MONGO_DB_URL);
+  // load lookups to database.
+  loadAppLookups()
 })
 .catch((err) => {
   console.log('Failed to connect to mongodb: ', err)
