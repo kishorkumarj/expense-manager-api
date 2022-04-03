@@ -3,7 +3,6 @@ const LookupModel = require('../models/Lookup');
 const UserModal = require('../models/User')
 const apiResponse = require('../helpers/apiResponse');
 
-
 exports.GetCategory = [
   auth,
   async function (req, res){

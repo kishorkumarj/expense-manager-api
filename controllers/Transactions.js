@@ -6,6 +6,8 @@ const AccountModal =  require('../models/Accounts');
 const apiResponse = require('../helpers/apiResponse');
 const { auth } = require('../middleware/auth')
 const permission = require('../middleware/permission');
+const { appLogger, stringify } = require('../utils/logger');
+const { getStartEndMonth } = require('../utils/utils');
 
 exports.ListTransactions = [
   auth,
@@ -31,11 +33,28 @@ exports.ListTransactions = [
     if (req.query.category){
       tasnaction_params['transactions.category'] = req.query.category;
     }
-
-    tasnaction_params['transactions.date'] = {
-      '$gte': new Date(2022, 03, 01),
-      //'$lt': new Date(2022, 03, 31)
+    
+    if (req.query.start_date && req.query.end_date){
+      tasnaction_params['transactions.date'] = {
+        '$gte': new Date(req.query.start_date + 'T00:00:00'),
+        '$lt': new Date(req.query.end_date + 'T23:59:59')
+      }
+    }else if (req.query.month){
+      // get first and last date of this month.
+      let [startDate, endDate] = getStartEndMonth(new Date(req.query.month))
+      tasnaction_params['transactions.date'] = {
+        '$gte': startDate,
+        '$lt': endDate
+      }
+    }else if (!req.query.get_all){
+      let [startDate, endDate] = getStartEndMonth(new Date());
+      tasnaction_params['transactions.date'] = {
+        '$gte': startDate,
+        '$lt': endDate
+      }
     }
+    
+    appLogger.debug('filter::%o transaction_filter%o', params, tasnaction_params)
 
     AccountModal.aggregate([
       {
@@ -57,7 +76,7 @@ exports.ListTransactions = [
     
       return apiResponse.jsonResponse(res, transactionList, 200)
     }).catch(err => {
-      console.log('Failed to get transactions. error: ', err)
+      appLogger.error(`Failed to get transactions. error: %o`, err)
       return apiResponse.errorResponse(res, 'Internal server error')
     })
   }
@@ -73,7 +92,7 @@ exports.CreateTransactionAPI = [
   .escape(),
 
   body('date')
-  .isDate()
+  .isLength({min: 1})
   .withMessage('Please enter transaction date.')
   .escape(),
 
@@ -116,7 +135,7 @@ exports.CreateTransactionAPI = [
       user_id: req.user.userId,
       _id: req.body.account_id
     }).catch(err => {
-      console.log('Error getting account: ', err)
+      appLogger.error(`Error getting account: %o`, err)
       return null
     })
 
@@ -126,7 +145,7 @@ exports.CreateTransactionAPI = [
 
     transaction = {
       name: req.body.name,
-      date: req.body.date,
+      date: new Date(req.body.date),
       amount: req.body.amount,
       category: req.body.category,
       expense: req.body.expense,
@@ -134,13 +153,12 @@ exports.CreateTransactionAPI = [
       date_added: new Date()
     }
     
-    //console.log('adding new transaction: ', transaction)
-
+    appLogger.info(`adding new transaction: %o`, transaction)
     try{
       account.transactions.push(transaction)
       const data = await account.save((error, result) => {
         if (error){
-          console.log('Failed to save transaction. error', error)
+          appLogger.error(`Failed to save transaction. error %o`, error)
           return apiResponse.errorResponse(res)
         }
 
@@ -148,7 +166,7 @@ exports.CreateTransactionAPI = [
 
       })
     }catch(err){
-      console.log('error: ', err)
+      appLogger.error(`Error %o`, err)
       return apiResponse.errorResponse(res)
     }
   }
@@ -174,7 +192,7 @@ exports.TransactionDetail = [
         return apiResponse.notFoundResponse(res)
       }
     }).catch(err => {
-      console.log(err);
+      appLogger.error(err)
       return apiResponse.errorResponse(res)
     })
   }
@@ -191,7 +209,7 @@ exports.UpdateTransaction = [
 
   body('date')
   .optional()
-  .isDate()
+  .isLength({min: 1})
   .withMessage('Please enter transaction date.')
   .escape(),
 
@@ -247,9 +265,9 @@ exports.UpdateTransaction = [
           if (field === 'amount'){
             data = parseInt(data)
           }else if (field === 'expense'){
-            console.log(data, typeof(data))
             data = (data === 'true');
-            console.log('data after:: ', data, typeof(data))
+          }else if(field === 'date'){
+            data = new Date(data)
           }
 
           transaction[field] = data;
@@ -258,7 +276,7 @@ exports.UpdateTransaction = [
   
       account.save((error, result) =>{
         if (error){
-          console.log('Failed to update transaction. error', error)
+          appLogger.error(`Failed to update transaction. error: %o`, error)
           return apiResponse.errorResponse(res)
         }
 
@@ -266,7 +284,7 @@ exports.UpdateTransaction = [
       })
 
     }).catch(err => {
-      console.log(err);
+      appLogger.error(err)
       return apiResponse.errorResponse(res)
     })
   }
@@ -291,7 +309,7 @@ exports.DeleteTransaction = [
       }
       return apiResponse.jsonResponse(res, {message: 'success'}, 202)
     }).catch(err => {
-      console.log(err)
+      appLogger.error(err)
       return apiResponse.errorResponse(res)
     })
   }

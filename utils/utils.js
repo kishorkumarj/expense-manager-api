@@ -9,3 +9,10 @@ const JWTData = {
 const generateJWTToken = payload => jwt.sign(payload, JWT_SECRET, JWTData);
 
 exports.generateJWTToken = generateJWTToken;
+
+exports.getStartEndMonth = (date) => {
+  let firstDay = new Date(date.getFullYear(), date.getMonth(), 1, '00', '00', '00');
+  let lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0, '23', '59', '59');
+
+  return [firstDay, lastDay]
+}

@@ -5,6 +5,7 @@ const AccountModal = require('../models/Accounts');
 const apiResponse = require('../helpers/apiResponse');
 const { auth } = require('../middleware/auth')
 const permission = require('../middleware/permission');
+const { appLogger, stringify } = require('../utils/logger');
 
 exports.addAccount = [
   auth,
@@ -42,10 +43,10 @@ exports.addAccount = [
     }).catch(err => null);
 
     if (account){
-      console.log('create account: Account with name already exist')
+      appLogger.info('create account: Account with name already exist')
       return apiResponse.badResponse(res, 'Account with this name already exist.')
     }else{
-      console.log('Creating new account.')
+      appLogger.silly('Creating new account.')
       const account = new AccountModal({
         account_name: req.body.accountName,
         account_type: req.body.accountType,
@@ -55,7 +56,7 @@ exports.addAccount = [
 
       account.save(err => {
         if(err){
-          console.log('Failed to create account. ', err)
+          appLogger.error('Failed to create account. %o', err)
           return apiResponse.errorResponse(res, 'Failed to create account.')
         }
 
@@ -183,7 +184,7 @@ exports.UpdateAccountAPI = [
 
     account.save(function(err){
       if (err){
-        console.log('error updating account details. ', err)
+        appLogger.log('error updating account details. %o', err)
         return apiResponse.errorResponse(res, 'Failed to update account')
       }
 

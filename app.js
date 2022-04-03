@@ -11,6 +11,7 @@ var config = require('./config/config');
 var indexRouter = require('./routes/index');
 var mainRouter = require('./routes/main');
 var { loadAppLookups } = require('./utils/initLookup');
+var { appLogger, stringify } = require('./utils/logger');
 
 global.baseDir = __dirname;
 
@@ -53,7 +54,7 @@ app.use(function(err, req, res, next) {
   }else{
     res.status(err.status || 500);
     let errMsg = 'Internal server errorr';
-    console.log(`${errMsg}: `, err.message);
+    appLogger.error(`${stringify(errMsg)} %o`, err.message)
     res.json({message: errMsg});
   }
 });
