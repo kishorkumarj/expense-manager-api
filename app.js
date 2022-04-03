@@ -32,11 +32,14 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
 app.use(logger(':date[clf] :method :url :status :total-time ms - :res[content-length]'));
+app.use(cors({
+  credentials: true,
+  origin: true,
+}));
 app.use(express.text());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(cors());
 
 app.use('/static', express.static(path.join(__dirname, 'public')));
 app.use('/api/v1/', mainRouter);

@@ -8,9 +8,10 @@ const UserController = require('../controllers/UserController');
 
 router.get('/home', BaseController.HomePage);
 router.post('/auth/register', AuthController.register);
-router.post('/auth/login', AuthController.login);
+router.post('/auth/obtain-token', AuthController.login);
 router.get('/auth/logout', AuthController.logout);
 
+router.get('/user', UserController.UserDetail);
 router.get('/user/categoty', UserController.GetCategory);
 
 router.post('/user/account', AccountController.addAccount);

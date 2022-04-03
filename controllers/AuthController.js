@@ -108,12 +108,12 @@ exports.login = [
 
     UserModal.findOne({email: req.body.username}).then(user => {
       if (!user){
-        return apiResponse.invalidResponse(res, errMsg)
+        return apiResponse.badResponse(res, errMsg)
       }
 
       bcrypt.compare(req.body.password, user.password, function(err, same){
         if (!same){
-          return apiResponse.invalidResponse(res, errMsg)
+          return apiResponse.badResponse(res, errMsg)
         }
 
         if (!user.active){

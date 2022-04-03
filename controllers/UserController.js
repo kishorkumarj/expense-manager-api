@@ -2,6 +2,7 @@ const { auth } = require('../middleware/auth')
 const LookupModel = require('../models/Lookup');
 const UserModal = require('../models/User')
 const apiResponse = require('../helpers/apiResponse');
+const { appLogger } = require('../utils/logger')
 
 exports.GetCategory = [
   auth,
@@ -37,5 +38,28 @@ exports.GetCategory = [
 
     categories.sort((a,b) => a.name > b.name ? 1 : -1 )
     return apiResponse.jsonResponse(res, categories, 200)
+  }
+]
+
+exports.UserDetail = [
+  auth,
+  function(req, res){
+    UserModal.findById(req.user.userId).then(user => {
+      if(user){
+        return apiResponse.jsonResponse(res, {
+          userId: user._id,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.email,
+          active: user.active,
+          role: user.role
+        }, 200)
+      }else{
+        return apiResponse.notFoundResponse(res)
+      }
+    }).catch(err => {
+      appLogger.error('Failed to load user details %o', err)
+      return apiResponse.errorResponse(res)
+    })
   }
 ]
