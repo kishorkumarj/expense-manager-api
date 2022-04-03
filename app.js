@@ -17,7 +17,7 @@ global.baseDir = __dirname;
 
 mongoose.connect(config.MONGO_DB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
 .then(() => {
-  console.log('connected to ', config.MONGO_DB_URL);
+  console.log('connected to Mongo db: ', config.MONGO_DB_URL);
   // load lookups to database.
   loadAppLookups()
 })
