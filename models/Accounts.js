@@ -19,6 +19,7 @@ const accountSchema = mongoose.Schema({
       category: { type: String, required: false, default: 'Other'},
       amount: {type: Number, required: true},
       expense: {type: Boolean, required: true, default: true},
+      income: {type: Boolean, required: true, default: false},
       currency: {type: String, default: 'INR'},
       note: {type: String, required: false},
       tags: {type: [{

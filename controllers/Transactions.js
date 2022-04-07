@@ -5,8 +5,7 @@ const UserModal = require('../models/User');
 const AccountModal =  require('../models/Accounts');
 const apiResponse = require('../helpers/apiResponse');
 const { auth } = require('../middleware/auth')
-const permission = require('../middleware/permission');
-const { appLogger, stringify } = require('../utils/logger');
+const { appLogger } = require('../utils/logger');
 const { getStartEndMonth } = require('../utils/utils');
 
 exports.ListTransactions = [
@@ -27,7 +26,7 @@ exports.ListTransactions = [
     if (transaction_type === 'debit'){
       tasnaction_params['transactions.expense'] = true;
     }else if (transaction_type === 'credit'){
-      tasnaction_params['transactions.expense'] = false
+      tasnaction_params['transactions.income'] = true
     }
 
     if (req.query.category){
@@ -107,8 +106,15 @@ exports.CreateTransactionAPI = [
   .escape(),
 
   body('expense')
+  .optional()
   .isBoolean()
   .withMessage('Specify whether transaction is expense or not.')
+  .escape(),
+
+  body('income')
+  .optional()
+  .isBoolean()
+  .withMessage('Specify whether transaction is income or not.')
   .escape(),
 
   body('account_id')
@@ -148,7 +154,8 @@ exports.CreateTransactionAPI = [
       date: new Date(req.body.date),
       amount: req.body.amount,
       category: req.body.category,
-      expense: req.body.expense,
+      expense: req.body.expense || false,
+      income: req.body.income || false,
       account_id: account._id,
       date_added: new Date()
     }
@@ -230,6 +237,12 @@ exports.UpdateTransaction = [
   .withMessage('Specify whether transaction is expense or not.')
   .escape(),
 
+  body('income')
+  .optional()
+  .isBoolean()
+  .withMessage('Specify whether transaction is income or not.')
+  .escape(),
+
   function(req, res){
 
     const errors = validationResult(req);
@@ -257,7 +270,7 @@ exports.UpdateTransaction = [
         return apiResponse.notFoundResponse(res);
       }
 
-      let fields = ['amount', 'name', 'date', 'category', 'expense']
+      let fields = ['amount', 'name', 'date', 'category', 'expense', 'income']
       fields.forEach(field => {
         
         if (field in req.body){
