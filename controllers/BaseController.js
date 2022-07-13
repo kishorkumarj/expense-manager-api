@@ -6,7 +6,7 @@ const { auth } = require('../middleware/auth');
 
 exports.HomePage = [
   function (req, res){
-    return apiResponse.successResponse(res, 'Welcome to express server home page.')
+    return apiResponse.successResponse(res, 'Welcome to Express API server.')
   }
 ]
 

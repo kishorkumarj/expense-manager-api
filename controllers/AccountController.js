@@ -7,6 +7,14 @@ const { auth } = require('../middleware/auth')
 const permission = require('../middleware/permission');
 const { appLogger, stringify } = require('../utils/logger');
 
+const queryMap = {
+  'credit': 'Credit Card',
+  'account': 'Account',
+  'loan': 'Loan',
+  'investment': 'Investment',
+  'other': 'Other'
+}
+
 exports.addAccount = [
   auth,
 
@@ -76,9 +84,15 @@ exports.addAccount = [
 exports.ListAllAccount=[
   auth,
   function (req, res){
-    AccountModal.find({
-      user_id: req.user.userId,
-   }).then( accounts => {
+    const filter = {
+      user_id: req.user.userId
+    };
+    const accountType = req.query.accountType;
+    if (accountType){
+      filter['account_type'] = queryMap[accountType];
+    }
+
+    AccountModal.find(filter).then( accounts => {
       const accountDetails = accounts.map(account => {
         return {
           id: account._id,

@@ -1,4 +1,5 @@
 const winston = require('winston');
+const config = require('../config/config');
 
 /*
 Suported log types:
@@ -10,7 +11,7 @@ Suported log types:
   silly: 5
 */
 
-const logLevel = process.env.LOG_LEVEL || 'info';
+const logLevel = config.LOG_LEVEL;
 
 const logConfiguration = {
   transports: [

@@ -1,11 +1,11 @@
-var dotenv = require('dotenv');
+//var dotenv = require('dotenv');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var cors = require('cors');
 var mongoose = require('mongoose')
-dotenv.config()
+//dotenv.config()
 
 var config = require('./config/config');
 var indexRouter = require('./routes/index');
@@ -23,19 +23,23 @@ mongoose.connect(config.MONGO_DB_URL, { useNewUrlParser: true, useUnifiedTopolog
 })
 .catch((err) => {
   console.log('Failed to connect to mongodb: ', err)
-  process.exit(1)
+  process.exit(0)
 })
 
 var app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+app.set('view engine', 'pug');
 
-app.use(logger(':date[clf] :method :url :status :total-time ms - :res[content-length]'));
+if (config.LOG_LEVEL === 'debug'){
+  app.use(logger('DEBUG: :date[clf] :method :url :status :total-time ms - :res[content-length]'));
+}
+
 app.use(cors({
   credentials: true,
   origin: true,
 }));
+
 app.use(express.text());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
