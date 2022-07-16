@@ -22,7 +22,7 @@ mongoose.connect(config.MONGO_DB_URL, { useNewUrlParser: true, useUnifiedTopolog
   loadAppLookups()
 })
 .catch((err) => {
-  console.log('Failed to connect to mongodb: ', err)
+  console.log(`Failed to connect to mongodb: ${config.MONGO_DB_URL}: error: `, err)
   process.exit(0)
 })
 

@@ -14,8 +14,6 @@ const createMongoURL = () => {
   }
   //add host and db name.
   mongoDbUrl += `${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME || 'expense-tracker'}`;
-
-  console.log(mongoDbUrl)
   return mongoDbUrl
 }
 
