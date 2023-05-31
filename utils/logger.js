@@ -1,4 +1,5 @@
 const winston = require('winston');
+const config = require('../config/config');
 
 /*
 Suported log types:
@@ -10,7 +11,7 @@ Suported log types:
   silly: 5
 */
 
-const logLevel = process.env.LOG_LEVEL || 'info';
+const logLevel = config.LOG_LEVEL;
 
 const logConfiguration = {
   transports: [
@@ -18,16 +19,27 @@ const logConfiguration = {
   ],
 
   format: winston.format.combine(
-      winston.format.timestamp({
-         format: 'DD/MMM/YYYY HH:mm:ss'
-     }),
-      winston.format.printf(info => `${info.level.toUpperCase()}: ${[info.timestamp]}: ${info.message}`),
+    winston.format.timestamp({
+      format: 'DD/MMM/YYYY HH:mm:ss'
+    }),
+    winston.format.prettyPrint(),
+    winston.format.splat(),
+    winston.format.printf(info => {
+      if (typeof info.message === 'object') {
+        info.message = JSON.stringify(info.message, null, 3)
+      }
+
+      return `${[info.timestamp]}: ${info.level.toUpperCase()}: ${info.message}`
+    }),
   )
 };
 
 const logger = winston.createLogger(logConfiguration);
 
+const stringify = (obj) => JSON.stringify(obj)
+
 module.exports = {
-  appLogger: logger
+  appLogger: logger,
+  stringify: stringify
 }
 

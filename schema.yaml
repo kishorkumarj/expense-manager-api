@@ -1,0 +1,79 @@
+user:
+  _id
+  firstName
+  last_name
+  email
+  phone
+  active
+  dob
+  accounts:
+    - name #hdfc babk
+      type # debit card
+      card_number #
+      account_number
+      balance
+      active
+  preferences:
+    theme # dark/light
+    currency # Dollar/INR
+    color_preference
+  spend_category: []
+  expense_category: []
+
+auth_token:
+  user
+  token
+  expiry
+
+transactions:
+  id
+  user: foreign_key
+  account:
+    account_info
+  amount
+  currency
+  date
+  category
+  expense
+  note
+  tags
+
+lookups:
+  theme:
+    datk
+    light
+  currency:
+    dollar
+    INR
+  spend_category:
+    Bills
+    Donation
+    EMI
+    Entertainment
+    Food & Drinnks
+    Fuel
+    Groceries
+    Health
+    Investment
+    Lend
+    Other
+    Shopping
+    Transfer
+    Travel
+    ATM
+  credit_category:
+    Account Transfer
+    Bank deposit
+    Investment
+    Loan
+    Other
+    Refund
+    Reimbursement
+    Reward
+    Salary
+
+
+
+
+
+  

@@ -1,0 +1,103 @@
+{
+  "SPEND": [
+    {
+      "name": "Bills",
+      "value": "Bills"
+    },
+    {
+      "name": "Donation",
+      "value": "Donation"
+    },
+    {
+      "name": "EMI",
+      "value": "EMI"
+    },
+    {
+      "name": "Entertainment",
+      "value": "Entertainment"
+    },
+    {
+      "name": "Food & Drinnks",
+      "value": "Food & Drinnks"
+    },
+    {
+      "name": "Fuel",
+      "value": "Fuel"
+    },
+    {
+      "name": "Groceries",
+      "value": "Groceries"
+    },
+    {
+      "name": "Health",
+      "value": "Health"
+    },
+    {
+      "name": "Investment",
+      "value": "Investment"
+    },
+    {
+      "name": "Lend",
+      "value": "Lend"
+    },
+    {
+      "name": "Other",
+      "value": "Other"
+    },
+    {
+      "name": "Shopping",
+      "value": "Shopping"
+    },
+    {
+      "name": "Transfer",
+      "value": "Transfer"
+    },
+    {
+      "name": "Travel",
+      "value": "Travel"
+    },
+    {
+      "name": "ATM",
+      "value": "ATM"
+    }
+  ],
+
+  "CREDIT": [
+    {
+      "name": "Account Transfer",
+      "value": "Account Transfer"
+    },
+    {
+      "name": "Bank deposit",
+      "value": "Bank deposit"
+    },
+    {
+      "name": "Investment",
+      "value": "Investment"
+    },
+    {
+      "name": "Loan",
+      "value": "Loan"
+    },
+    {
+      "name": "Other",
+      "value": "Other"
+    },
+    {
+      "name": "Refund",
+      "value": "Refund"
+    },
+    {
+      "name": "Reimbursement",
+      "value": "Reimbursement"
+    },
+    {
+      "name": "Reward",
+      "value": "Reward"
+    },
+    {
+      "name": "Salary",
+      "value": "Salary"
+    }
+  ]
+}
